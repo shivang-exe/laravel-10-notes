@@ -126,7 +126,7 @@ If you have to add a specific regex to every routes that containing route parame
 
 
 #    ------> Redirect Routes ?
-     when anyone hits any route which do not defined then what should be done will tell by fallback callback.
+     
        
  {{   
         Route::get('/', function() {

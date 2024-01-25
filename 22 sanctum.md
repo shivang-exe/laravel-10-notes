@@ -2,7 +2,7 @@
 
 Introducing laravel sanctum ( sanctum >>> JWT )
 
-Laravel sanctum is a authentication system for SPAs, mobile applications and simple, `token based APIs`.
+Laravel sanctum is a authentication system for SPAs, mobile applications and simple `token based APIs`.
 
 Working: Sanctum allows each user of your application to generate multiple API tokens for their account. These tokens may be granted abilities / scopes which specify which actions the tokens are allowed to perform.
 

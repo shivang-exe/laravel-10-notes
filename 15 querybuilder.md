@@ -115,10 +115,6 @@ $student = DB::table('student')->select('name', 'email');                       
 $student = DB::table('student')->distinct()->select('name', 'email');                                                  $
 
 
-// use distinct() method to get all unique values
-$student = DB::table('student')->distinct()->select('name', 'email');                                                  $
-
-
 // use where( 'col_name', relational operator,  value_expected ) method to apply conditions
 $student = DB::table('student')->where('id', '=', 3)->select('name', 'email');                                         $
 
@@ -260,3 +256,5 @@ $ DELETE DATA $
     // delete a table
     DB::table('student')->truncate();
 }}
+
+

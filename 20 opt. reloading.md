@@ -52,3 +52,5 @@ Add the logic in your controller
 
 # Step 3
 Check the same in Thunderclient by passing query param ex: `{{URL}}/events/?include=user,attendee`
+
+

@@ -7,7 +7,7 @@ Traits in laravel is a cool feature that enables a class to import the external 
 
 ex: 
 
-App\Http\Trait:
+inside App\Http\Trait:
 creating a file canLoadRnsps.php
 {{
 

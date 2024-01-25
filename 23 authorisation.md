@@ -46,6 +46,7 @@ Apply the gate in the routes for validations.
 {{
 
     Route::get('/posts', [PostController::class, 'index'] )->middleware(['can:ability_name']);
+    ex:- Route::get('/posts', [PostController::class, 'index'] )->middleware(['can:isAdmin']);
 }}
 
 

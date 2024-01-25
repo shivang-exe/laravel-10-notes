@@ -18,8 +18,9 @@ Let suppose there are two models. (a) `Customers`   (b) `Mobiles`
         Schema::create('mobiles', function (Blueprint $table) {
             $table->id();
             $table->text('mobile_name');
-            $table->unsignedBigInteger('customer_id');
-            $table->foreign('customer_id')->references('id')->on('customers');
+            // $table->unsignedBigInteger('customer_id');
+            // $table->foreign('customer_id')->references('id')->on('customers');
+            $table->foreignIdFor(\App\Models\Customers)->constrained();$
             $table->timestamps();$
         });                         
     }
@@ -31,6 +32,7 @@ Let suppose there are two models. (a) `Customers`   (b) `Mobiles`
     class Customer extends Model
     {
         use HasFactory;
+        
         public function mobile(){
             return $this->hasOne(Mobile::class);
         }
@@ -42,7 +44,7 @@ Let suppose there are two models. (a) `Customers`   (b) `Mobiles`
     class Mobile extends Model
     {
         use HasFactory;
-        public function mobile(){
+        public function customer(){
             return $this->belongsTo(Customer::class);
         }
     }
@@ -106,7 +108,7 @@ There is One to Many relationship from Author to Post.
             $table->foreignId('author_id')->constrained()->cascadeOnDelete();$
 
             use App/Models/ModelName;
-            $table->foreignIdFor(ModelName::class);$
+            $table->foreignIdFor(ModelName::class);->constrained()$
 
         });
     }
@@ -118,7 +120,7 @@ There is One to Many relationship from Author to Post.
     class Author extends Model
     {
         use HasFactory;
-        public function post(){
+        public function posts(){
             return $this->hasMany(Post::class);
         }
     }
