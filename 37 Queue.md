@@ -109,8 +109,9 @@ While performing an operation if you want to rate limit the jobs execution / sec
 
     public function handle()
     {
+        // In every two seconds this will execute only once
         return $this->release(2); // back job to queue after 2 seconds
-}
+    }
 
 }}
 
@@ -145,6 +146,7 @@ There we have Bus Facade which helps us to do so.
 `Bus::chain()` => enable us to execute multiple jobs one by one.  
 Cons:
    If any of one job breaks for some reason, further remaining jobs will also not execute.
+   They depends on each other
 
 {{
 
@@ -158,7 +160,7 @@ Cons:
 
 }}
 
-To remove this dependency we can utilize a batch(). It will execute all parallely. Before using batch we have to create a batch table( iff we are using Database for execution )
+To remove this dependency we can utilize a batch(). It will execute all sepaerately that means there is no dependency on one another. Before using batch we have to create a batch table( iff we are using Database for execution )
 `Bus::batch()` => enable us to execute multiple jobs parallely.  
 
 {{
@@ -257,4 +259,96 @@ To remove this dependency we can utilize a batch(). It will execute all parallel
         ->allowFailures()
         ->dispatch();
 
+}}
+
+-> Batch inside a chain
+
+{{
+    \Illuminate\Support\Facades\Bus::chain([
+        new \App\Jobs\PullRepo(),
+        function () {
+            \Illuminate\Support\Facades\Bus::batch([...])->dispatch()
+        }
+    ])->dispatch();
+
+}}
+
+
+
+
+# Understanding Race conditions
+
+A situation when two or more processes are trying to make changes on a same resource at a same time.
+Similarly this case can happen with jobs. Two same jobs can execute by a two different workers at a same time are accessing the same resource at a same time. `how we will tackle this ?`
+
+> 1st approach to solve this is using Cache::lock()
+
+{{
+
+    // MakePayment.php Job
+
+  public function handle(): void
+    {
+        // Cache -> Global Cache facade 
+        // lock  -> create a lock of name payments, 
+        // block -> This method will keep try to acquire a lock. Try for provided no. of seconds and still if not get lock then it will throw LockTimeoutException, but if it gets lock within time then it will invoke the passed closure.
+
+        Cache::lock('payments')->block(1, function() {
+            info('Payment has started');
+            sleep(5);
+            info('Payment is done');
+        });
+    }
+
+}}
+
+
+> 2nd approach to solve this is using Redis::funnel()
+{{
+
+    // Class methods \App\Jobs\Example.php
+    public function handle()
+    {
+        Redis::throttle('key_name')
+            ->limit(10)               // limit only 10 jobs can run concurrently  
+            ->block(10)               // wait for 10 secs and try acquire lock
+            ->then(function () {
+
+                Log::info('Started Deploying...');
+                sleep(5);
+                Log::info('Finished Deploying...');
+
+            });			
+    }
+
+}}
+
+> 3rd approach to solve this is using Redis::throttle()
+{{
+
+    // Class methods \App\Jobs\Example.php
+    public function handle()
+    {
+        Redis::throttle('key') 
+            ->allow(10)                               // allow only 10 jobs can run 
+            ->every(60)                               // allow only 10 jobs can run in 60 seconds
+            ->block(10)                               // wait for 10 secs and try acquire lock
+            ->then(function () {                      // once acquired start executing closure
+                Log::info('Started Deploying...');
+                sleep(5);
+                Log::info('Finished Deploying...');
+            });			
+    }
+
+}}
+
+
+> 4th Approach is to just using a simple middleware
+This middleware will do not block any job instead it just release the job again to the queue. we can add a delay also in the second parameter of constructor.
+
+{{
+    public function middleware()
+    {
+        return [new WithoutOverlapping('key_name', 10)];
+    }
 }}
