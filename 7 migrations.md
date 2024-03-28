@@ -22,10 +22,10 @@ There we got two functions `up` and `down`:
 
 -> down(){
     The down() function reverse the operations performed by `up` function. (Rollback function)
-}
+} 
 
 
-<a Suppose if we have to run a create database query, then in the up() we write the code to create a table and in the down() table we'll write the code to drop the same table> 
+<a Suppose if we have to run a create database query, then in the up() we write the code to create a table and in the down() table we'll write the code to drop the same table > 
 
 
 Migrate cmd:  `php artisan migrate`

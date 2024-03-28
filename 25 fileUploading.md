@@ -4,7 +4,7 @@ Go to your config/filesystem.php, the file tell us about the sys configuration o
 
 
 For all of these configurations are already pre-written.
-But for 'local+public' : means anyone from public can access the assets inside this folder which is inside another folder which is not allowed to access publicly. How? through a soft.
+But for 'local+public' : means anyone from public can access the assets inside this folder which is inside another folder which is not allowed to access publicly. How? through a soft link.
 
 A soft link has been created from storage/app/public to another folder where users can only get access to public folder items.
 

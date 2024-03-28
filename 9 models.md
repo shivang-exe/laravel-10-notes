@@ -19,17 +19,17 @@ cmd: `php artisan make:model ModelName -c` ( Create model along with its control
 cmd: `php artisan make:model ModelName -mf` ( Create model along with its migration & controller file )
 ...
 
-cmd: `php artisan make:model ModelName -mfsc` ( gives all )
+cmd: `php artisan make:model ModelName -mfsc` ( gives all ) 
 
 
 
 MODEL STRUCTURE:
 {{
-
+  
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Model;                 
 
 class Student extends Model
 {
@@ -94,7 +94,7 @@ Route Model binding provides us opportunity to do it in a single move.
 {{
 
     Route::get('/tasks/{id}/edit' , function($id){
-        $task = find($id);
+        $task = findOrFail($id);
     });
 
     

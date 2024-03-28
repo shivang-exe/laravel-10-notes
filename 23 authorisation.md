@@ -179,6 +179,11 @@ Blade Rendering
 @cannot
 }}
 
+{{
+    // in the controller
+    $this->authorize('fxn_name', Model::class );$
+}}
+
 
 If i am using standard mechanism like resource controller, then laravel will create each authorisation action for us and each action is already mapped.
 

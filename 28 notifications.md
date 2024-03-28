@@ -86,3 +86,61 @@ $user->notify(new NotificationName( $instance ));
     
     Notification::send( $users, new NotificationName() );
 }}
+
+STEP 1:
+
+// Simply you can send nots without queue 
+Go to .env and change the credentials
+
+
+// Implementing Queue using database
+
+-> Go To .env file and change 
+`QUEUE_CONNECTION=database`
+
+-> Make a Job
+`php artisan make:job SendNewTicketNotification`
+
+{{
+
+// Job Structure
+class SendNewTicketNotification implements ShouldQueue
+{
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    protected $user;
+    protected $ticket;
+
+    public function __construct($user, $ticket)
+    {
+        $this->user = $user;
+        $this->ticket = $ticket;
+    }
+
+    public function handle()
+    {
+        $this->user->notify(new NewTicketNotification($this->ticket));
+    }
+}
+
+
+// Call a job from controller
+$users = User::all();
+
+// Create a new ticket
+$ticket = Ticket::create([
+    // Your ticket creation data here...
+]);
+
+// Dispatch the job for each user
+foreach ($users as $user) {
+    SendNewTicketNotification::dispatch($user, $ticket);
+}
+
+}}
+
+-> Make a Job Table
+`php artisan queue:table`
+
+-> Run Queue
+`php artisan queue:work`

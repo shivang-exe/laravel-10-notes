@@ -59,8 +59,8 @@ $task = collect($tasks)->firstWhere('id', $id );
 
 //==> `in_array( arr, array ) checks arr value exists in array or not.`
 {{
-    // checks array consist 'trim' value or not
-    $val = in_array( 'trim',  $array_values );
+    // checks array consist $val value (return true) or not (return false)
+    $val = in_array(  $val, $array_values );
 }}
 
 

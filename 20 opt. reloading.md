@@ -38,7 +38,6 @@ Add the logic in your controller
 
         foreach( $relations as $relation )
         {
-
             $query->when(
                 $this->shouldIncludeRelation($relation),
                 fn( $q ) => $q->with($relation)
